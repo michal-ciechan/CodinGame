@@ -11,6 +11,8 @@ using System.Collections.Generic;
 class PlayerGame
 {
     static Player me = new Player();
+    private static MoleculeStation _molecule = new MoleculeStation();
+    
     static void Main(string[] args)
     {
 
@@ -29,199 +31,296 @@ class PlayerGame
         // game loop
         while (true)
         {
-            var players = new List<Player>();
-
-            for (int i = 0; i < 2; i++)
+            try
             {
+                var players = new List<Player>();
+
+                for (int i = 0; i < 2; i++)
+                {
+                    inputs = Console.ReadLine().Split(' ');
+                    string target = inputs[0];
+                    int eta = int.Parse(inputs[1]);
+                    int score = int.Parse(inputs[2]);
+                    int storageA = int.Parse(inputs[3]);
+                    int storageB = int.Parse(inputs[4]);
+                    int storageC = int.Parse(inputs[5]);
+                    int storageD = int.Parse(inputs[6]);
+                    int storageE = int.Parse(inputs[7]);
+                    int expertiseA = int.Parse(inputs[8]);
+                    int expertiseB = int.Parse(inputs[9]);
+                    int expertiseC = int.Parse(inputs[10]);
+                    int expertiseD = int.Parse(inputs[11]);
+                    int expertiseE = int.Parse(inputs[12]);
+
+                    players.Add(new Player
+                    {
+                        Target = (Module)Enum.Parse(typeof(Module), target),
+                        Eta = eta,
+                        Score = score,
+                        Storage =
+                        {
+                            A = storageA,
+                            B = storageB,
+                            C = storageC,
+                            D = storageD,
+                            E = storageE,
+                        },
+                        Expertise =
+                        {
+                            A = expertiseA,
+                            B = expertiseB,
+                            C = expertiseC,
+                            D = expertiseD,
+                            E = expertiseE,
+                        },
+                    });
+
+                }
+
+                me.Target = players[0].Target;
+                me.Eta = players[0].Eta;
+                me.Score = players[0].Score;
+                me.Storage = players[0].Storage;
+                me.Expertise = players[0].Expertise;
+
                 inputs = Console.ReadLine().Split(' ');
-                string target = inputs[0];
-                int eta = int.Parse(inputs[1]);
-                int score = int.Parse(inputs[2]);
-                int storageA = int.Parse(inputs[3]);
-                int storageB = int.Parse(inputs[4]);
-                int storageC = int.Parse(inputs[5]);
-                int storageD = int.Parse(inputs[6]);
-                int storageE = int.Parse(inputs[7]);
-                int expertiseA = int.Parse(inputs[8]);
-                int expertiseB = int.Parse(inputs[9]);
-                int expertiseC = int.Parse(inputs[10]);
-                int expertiseD = int.Parse(inputs[11]);
-                int expertiseE = int.Parse(inputs[12]);
+                _molecule.Available.A = int.Parse(inputs[0]);
+                _molecule.Available.B = int.Parse(inputs[1]);
+                _molecule.Available.C = int.Parse(inputs[2]);
+                _molecule.Available.D = int.Parse(inputs[3]);
+                _molecule.Available.E = int.Parse(inputs[4]);
 
-                if (i == 0)
+                int sampleCount = int.Parse(Console.ReadLine());
+
+                var samples = new List<Sample>(sampleCount);
+                for (int i = 0; i < sampleCount; i++)
                 {
-                    me.Target = target;
-                    me.Eta = eta;
-                    me.Score = score;
-                    me.StorageA = storageA;
-                    me.StorageB = storageB;
-                    me.StorageC = storageC;
-                    me.StorageD = storageD;
-                    me.StorageE = storageE;
-                    me.ExpertiseA = expertiseA;
-                    me.ExpertiseB = expertiseB;
-                    me.ExpertiseC = expertiseC;
-                    me.ExpertiseD = expertiseD;
-                    me.ExpertiseE = expertiseE;
+                    inputs = Console.ReadLine().Split(' ');
+                    int sampleId = int.Parse(inputs[0]);
+                    int carriedBy = int.Parse(inputs[1]);
+                    int rank = int.Parse(inputs[2]);
+                    string expertiseGain = inputs[3];
+                    int health = int.Parse(inputs[4]);
+                    int costA = int.Parse(inputs[5]);
+                    int costB = int.Parse(inputs[6]);
+                    int costC = int.Parse(inputs[7]);
+                    int costD = int.Parse(inputs[8]);
+                    int costE = int.Parse(inputs[9]);
+
+                    samples.Add(new Sample
+                    {
+                        SampleId = sampleId,
+                        CarriedBy = carriedBy,
+                        Rank = rank,
+                        ExpertiseGain = expertiseGain,
+                        Health = health,
+                        Cost =
+                        {
+                            A = costA,
+                            B = costB,
+                            C = costC,
+                            D = costD,
+                            E = costE,
+                        },
+                    });
                 }
 
-                players.Add(new Player
+
+                Console.Error.WriteLine($"Me: {me}");
+                Console.Error.WriteLine($"Available Molecules: {_molecule.Available}");
+
+                foreach (var sample in me.Samples)
                 {
-                    Target = target,
-                    Eta = eta,
-                    Score = score,
-                    StorageA = storageA,
-                    StorageB = storageB,
-                    StorageC = storageC,
-                    StorageD = storageD,
-                    StorageE = storageE,
-                    ExpertiseA = expertiseA,
-                    ExpertiseB = expertiseB,
-                    ExpertiseC = expertiseC,
-                    ExpertiseD = expertiseD,
-                    ExpertiseE = expertiseE,
-                });
-
-            }
-
-            inputs = Console.ReadLine().Split(' ');
-            int availableA = int.Parse(inputs[0]);
-            int availableB = int.Parse(inputs[1]);
-            int availableC = int.Parse(inputs[2]);
-            int availableD = int.Parse(inputs[3]);
-            int availableE = int.Parse(inputs[4]);
-            int sampleCount = int.Parse(Console.ReadLine());
-
-            var samples = new List<Sample>(sampleCount);
-            for (int i = 0; i < sampleCount; i++)
-            {
-                inputs = Console.ReadLine().Split(' ');
-                int sampleId = int.Parse(inputs[0]);
-                int carriedBy = int.Parse(inputs[1]);
-                int rank = int.Parse(inputs[2]);
-                string expertiseGain = inputs[3];
-                int health = int.Parse(inputs[4]);
-                int costA = int.Parse(inputs[5]);
-                int costB = int.Parse(inputs[6]);
-                int costC = int.Parse(inputs[7]);
-                int costD = int.Parse(inputs[8]);
-                int costE = int.Parse(inputs[9]);
-
-                samples.Add(new Sample
-                {
-                    SampleId = sampleId,
-                    CarriedBy = carriedBy,
-                    Rank = rank,
-                    ExpertiseGain = expertiseGain,
-                    Health = health,
-                    CostA = costA,
-                    CostB = costB,
-                    CostC = costC,
-                    CostD = costD,
-                    CostE = costE,
-                });
-            }
-
-            me.Samples = samples.Where(x => x.CarriedBy == 0).ToList();
-            
-            // Main Game Loop
-
-            if (!me.Samples.Any())
-            {
-
-                if (me.Target != Modules.DIAGNOSIS)
-                {
-                    Console.WriteLine($"GOTO {Modules.DIAGNOSIS}");
-                    continue;
+                    Console.Error.WriteLine($"$Held Sample: {sample}");
                 }
-            }
-            if (me.Target == Modules.DIAGNOSIS && me.Samples.Count < 3)
-            {
-                var remainingCapacity = 10 - me.NeededMolecules;
 
-                var sample = samples
-                    .Where(x => x.CarriedBy == -1)
-                    .OrderByDescending(x => x.HealthPerCost)
-                    .FirstOrDefault(x => x.TotalCost <= remainingCapacity);
+                me.Samples = samples.Where(x => x.CarriedBy == 0).ToList();
 
-                if (sample != null)
+                // Main Game Loop
+
+                if (me.Eta > 0)
                 {
-                    me.Samples.Add(sample);
-                    Console.WriteLine($"CONNECT {sample.SampleId}");
+                    Console.WriteLine("WAIT");
                     continue;
                 }
 
-            }
-            if (me.Target == Modules.LABORATORY)
-            {
-                var sample = me.Samples.FirstOrDefault(x => !me.NeedMolecule(x));
-
-                if (sample != null)
+                if (!me.Samples.Any())
                 {
-                    me.Samples.Remove(sample);
-                    Console.WriteLine($"CONNECT {sample.SampleId}");
-                    continue;
+                    if (me.Target != Module.SAMPLES)
+                    {
+                        Actions.GoTo(Module.SAMPLES);
+                    }
                 }
-            }
 
-            if (me.NeedMolecule())
-            {
-                if (me.Target != Modules.MOLECULES)
+                if (me.Target == Module.SAMPLES)
                 {
-                    Console.WriteLine($"GOTO {Modules.MOLECULES}");
-                    continue;
+                    if (me.Samples.Count < 3)
+                    {
+                        Console.WriteLine($"CONNECT 2");
+                        continue;
+                    }
+
+                    Actions.GoTo(Module.DIAGNOSIS);
                 }
-                else
+
+                if (me.Target == Module.DIAGNOSIS)
                 {
-                    if (me.NeedsA)
+                    var undiagnosedSample = me.Samples.FirstOrDefault(x => !x.IsDiagnosed);
+
+                    if (undiagnosedSample != null)
                     {
-                        Console.WriteLine($"CONNECT A");
+                        Console.WriteLine($"CONNECT {undiagnosedSample.SampleId}");
                         continue;
                     }
-                    if (me.NeedsB)
+
+                    if (me.Samples.Any() && me.Samples.All(x => !x.AreMoleculesAvailable()))
                     {
-                        Console.WriteLine($"CONNECT B");
-                        continue;
-                    }
-                    if (me.NeedsC)
-                    {
-                        Console.WriteLine($"CONNECT C");
-                        continue;
-                    }
-                    else if (me.NeedsD)
-                    {
-                        Console.WriteLine($"CONNECT D");
-                        continue;
-                    }
-                    if (me.NeedsE)
-                    {
-                        Console.WriteLine($"CONNECT E");
+                        var sample = me.Samples.First();
+                        Console.WriteLine($"CONNECT {sample.SampleId}");
                         continue;
                     }
                 }
+
+                if (me.Target == Module.LABORATORY)
+                {
+                    var sample = me.Samples.FirstOrDefault(x => !me.NeedMolecule(x));
+
+                    if (sample != null)
+                    {
+                        me.Samples.Remove(sample);
+                        Console.WriteLine($"CONNECT {sample.SampleId}");
+                        continue;
+                    }
+                }
+
+                if (me.NeedMolecule() && me.HasCapacity)
+                {
+                    if (me.Target != Module.MOLECULES)
+                    {
+                        Actions.GoTo(Module.MOLECULES);
+                    }
+
+                    var totalCost = 0;
+
+                    var availableMolecules = _molecule.Available;
+
+                    var collectableSamples = new List<Sample>();
+
+                    foreach (var sample in me.Samples.OrderByDescending(x => x.HealthPerCost))
+                    {
+                        if (sample.TotalCost > 10)
+                        {
+                            Console.Error.WriteLine($"Ignoring SampleId {sample.SampleId} because of total cost");
+                            continue;
+                        }
+
+                        {
+                            if ((totalCost + sample.TotalCost) > 10)
+                            {
+                                Console.Error.WriteLine(
+                                    $"Ignoring SampleId {sample.SampleId} because of total cost of previous samples");
+                                continue;
+                            }
+
+                            if (!sample.AreMoleculesAvailable())
+                            {
+                                Console.Error.WriteLine(
+                                    $"Ignoring SampleId {sample.SampleId} because molecules are not available");
+                                continue;
+                            }
+
+                            totalCost += sample.TotalCost;
+                            collectableSamples.Add(sample);
+                        }
+                    }
+
+                    if (!collectableSamples.Any())
+                    {
+                        Console.Error.WriteLine(
+                            "Uh oh, no collectable samples. Should go and discard and get new ones");
+                    }
+
+                    foreach (var sample in collectableSamples)
+                    {
+                        Console.Error.WriteLine($"Collecting for SampleId {sample.SampleId}");
+
+                        if (me.NeedMolecule(sample, Molecule.A) && _molecule.Available.A > 0)
+                        {
+                            Actions.Connect(Molecule.A);
+                        }
+
+                        if (me.NeedMolecule(sample, Molecule.B) && _molecule.Available.B > 0)
+                        {
+                            Actions.Connect(Molecule.B);
+                        }
+
+                        if (me.NeedMolecule(sample, Molecule.C) && _molecule.Available.C > 0)
+                        {
+                            Actions.Connect(Molecule.C);
+                        }
+
+                        if (me.NeedMolecule(sample, Molecule.D) && _molecule.Available.D > 0)
+                        {
+                            Actions.Connect(Molecule.D);
+                        }
+
+                        if (me.NeedMolecule(sample, Molecule.E) && _molecule.Available.E > 0)
+                        {
+                            Actions.Connect(Molecule.E);
+                        }
+
+                        Console.Error.WriteLine($"Didn't Need any molecules for SampleId {sample.SampleId}");
+                    }
+                }
+
+                if (me.Target != Module.LABORATORY)
+                {
+                    Actions.GoTo(Module.LABORATORY);
+                }
+
+                Console.Error.WriteLine("Uh oh reached end");
+                // Write an action using Console.WriteLine()
+                // To debug: Console.Error.WriteLine("Debug messages...");
             }
-            else if (me.Target != Modules.LABORATORY)
+            catch (EndTurnException e)
             {
-                Console.WriteLine($"GOTO {Modules.LABORATORY}");
-                continue;
             }
+        }
+    }
 
-            // Write an action using Console.WriteLine()
-            // To debug: Console.Error.WriteLine("Debug messages...");
+    public class EndTurnException : Exception
+    {
+    }
 
+    private class MoleculeStation
+    {
+        public MoleculeQuantity Available = new MoleculeQuantity();
+    }
 
+    public static class Actions
+    {
+        public static void GoTo(Module module)
+        {
+            Console.WriteLine($"GOTO {module.ToString()}");
+            throw new EndTurnException();
         }
 
-
+        public static void Connect(Molecule m)
+        {
+            Console.WriteLine($"CONNECT {m.ToString()}");
+            throw new EndTurnException();
+            
+        }
     }
 
 
-    class Modules
+    internal enum Module
     {
-        public static string SAMPLES = "SAMPLES";
-        public static string DIAGNOSIS = "DIAGNOSIS";
-        public static string MOLECULES = "MOLECULES";
-        public static string LABORATORY = "LABORATORY";
+        START_POS,
+        SAMPLES,
+        DIAGNOSIS,
+        MOLECULES,
+        LABORATORY,
     }
 
     class Sample
@@ -231,53 +330,127 @@ class PlayerGame
         public int Rank;
         public string ExpertiseGain;
         public int Health;
-        public int CostA;
-        public int CostB;
-        public int CostC;
-        public int CostD;
-        public int CostE;
+        public MoleculeQuantity Cost = new MoleculeQuantity();
+        public MoleculeQuantity CurrentCost => Cost - me.Expertise;
+        public MoleculeQuantity Need => Cost - me.Expertise - me.Storage;
 
-        public int TotalCost => CostA + CostB + CostC + CostD + CostE;
+        public int TotalCost => Cost.Total;
         public double HealthPerCost => (double)Health / (double)TotalCost;
+        public bool IsDiagnosed => TotalCost > 0;
+
+        public bool AreMoleculesAvailable(Molecule m) => m switch
+        {
+            Molecule.A => _molecule.Available.A >= Cost.A,
+            Molecule.B => _molecule.Available.B >= Cost.B,
+            Molecule.C => _molecule.Available.C >= Cost.C,
+            Molecule.D => _molecule.Available.D >= Cost.D,
+            Molecule.E => _molecule.Available.E >= Cost.E,
+            _ => throw new ArgumentOutOfRangeException(nameof(m), m, null)
+        };
+
+        public bool AreMoleculesAvailable() => AreMoleculesAvailable(Molecule.A) && 
+                                               AreMoleculesAvailable(Molecule.B) &&
+                                               AreMoleculesAvailable(Molecule.C) && 
+                                               AreMoleculesAvailable(Molecule.D) &&
+                                               AreMoleculesAvailable(Molecule.E);
+
+        public bool Needs(Molecule m) => me.NeedMolecule(this, m);
+
+        public override string ToString()
+        {
+            return $"{nameof(SampleId)}: {SampleId}, {nameof(Rank)}: {Rank}, {nameof(ExpertiseGain)}: {ExpertiseGain}, {nameof(Health)}: {Health}, Cost: {Cost}, Need: {Need}, {nameof(HealthPerCost)}: {HealthPerCost}, {(IsDiagnosed ? "DIAGNOSED" : "UNDIAGNOSED")}, {nameof(AreMoleculesAvailable)}: {AreMoleculesAvailable()}";
+        }
+    }
+
+    public class MoleculeQuantity
+    {
+        public int A;
+        public int B;
+        public int C;
+        public int D;
+        public int E;
+
+        public int this[Molecule m] => m switch
+        {
+            Molecule.A => A,
+            Molecule.B => B,
+            Molecule.C => C,
+            Molecule.D => D,
+            Molecule.E => E,
+            _ => throw new ArgumentOutOfRangeException(nameof(m), m, null)
+        };
+        public int Total => A + B + C + D + E;
+
+        public override string ToString()
+        {
+            return $"{Total} [{A}, {B}, {C}, {D}, {E}]";
+        }
+        
+        public static MoleculeQuantity operator +(MoleculeQuantity l, MoleculeQuantity r)
+            => new MoleculeQuantity
+            {
+                A = l.A + r.A, 
+                B = l.B + r.B, 
+                C = l.C + r.C, 
+                D = l.D + r.D, 
+                E = l.E + r.E, 
+            };
+        
+        public static MoleculeQuantity operator -(MoleculeQuantity l, MoleculeQuantity r)
+            => new MoleculeQuantity
+            {
+                A = l.A - r.A, 
+                B = l.B - r.B, 
+                C = l.C - r.C, 
+                D = l.D - r.D, 
+                E = l.E - r.E, 
+            };
+
     }
 
     class Player
     {
-        public string Target;
+        public Module Target;
         public int Eta;
         public int Score;
-        public int StorageA;
-        public int StorageB;
-        public int StorageC;
-        public int StorageD;
-        public int StorageE;
-        public int ExpertiseA;
-        public int ExpertiseB;
-        public int ExpertiseC;
-        public int ExpertiseD;
-        public int ExpertiseE;
+        public MoleculeQuantity Storage = new MoleculeQuantity();
+        public MoleculeQuantity Expertise = new MoleculeQuantity();
 
 
         public List<Sample> Samples = new List<Sample>();
 
-        public bool NeedsA => Samples.Sum(x => x.CostA) > StorageA;
-        public bool NeedsB => Samples.Sum(x => x.CostB) > StorageB;
-        public bool NeedsC => Samples.Sum(x => x.CostC) > StorageC;
-        public bool NeedsD => Samples.Sum(x => x.CostD) > StorageD;
-        public bool NeedsE => Samples.Sum(x => x.CostE) > StorageE;
+        public bool NeedMolecule(Sample s, Molecule m) => m switch
+        {
+            Molecule.A => s.Cost.A > Storage.A,
+            Molecule.B => s.Cost.B > Storage.B,
+            Molecule.C => s.Cost.C > Storage.C,
+            Molecule.D => s.Cost.D > Storage.D,
+            Molecule.E => s.Cost.E > Storage.E,
+            _ => throw new ArgumentOutOfRangeException(nameof(m), m, null)
+        };
 
-        public bool NeedMoleculeA(Sample s) => s.CostA > StorageA;
-        public bool NeedMoleculeB(Sample s) => s.CostB > StorageB;
-        public bool NeedMoleculeC(Sample s) => s.CostC > StorageC;
-        public bool NeedMoleculeD(Sample s) => s.CostD > StorageD;
-        public bool NeedMoleculeE(Sample s) => s.CostE > StorageE;
+        public bool NeedMolecule(Sample s) => NeedMolecule(s, Molecule.A) || NeedMolecule(s, Molecule.B) || NeedMolecule(s, Molecule.C) || NeedMolecule(s, Molecule.D) || NeedMolecule(s, Molecule.E);
 
-        public bool NeedMolecule(Sample s) => NeedMoleculeA(s) || NeedMoleculeB(s) || NeedMoleculeC(s) || NeedMoleculeD(s) || NeedMoleculeE(s);
-
-        public bool NeedMolecule() => NeedsA || NeedsB || NeedsC || NeedsD || NeedsE;
+        public bool NeedMolecule() => Samples.Any() && Samples.Select(x => x.Need).Aggregate((l, r) => l + r).Total > 0;
 
         public int NeededMolecules => Samples.Sum(x => x.TotalCost);
 
         public bool IsCarrying(Sample s) => Samples.Any(x => x.SampleId == s.SampleId);
+        public bool HasCapacity => TotalStorage < 10;
+        private int TotalStorage => Storage.Total;
+
+        public override string ToString()
+        {
+            return $"{nameof(Target)}: {Target}, {nameof(Eta)}: {Eta}, {nameof(Storage)}: {Storage}, {nameof(Expertise)}: {Expertise}, {nameof(HasCapacity)}: {HasCapacity}, {nameof(NeedMolecule)}: {NeedMolecule()}";
+        }
     }
+}
+
+internal enum Molecule
+{
+    A,
+    B,
+    C,
+    D,
+    E,
 }
